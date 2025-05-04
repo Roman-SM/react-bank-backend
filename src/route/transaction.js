@@ -86,6 +86,7 @@ router.post('/send', function (req, res) {
     )
 
     User.withdrawal(senderUser, sum)
+    User.deposit(recipientEmail, sum)
 
     Notification.newEvent(
       Notification.announcement,
