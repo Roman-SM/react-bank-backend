@@ -245,9 +245,9 @@ router.get('/transactions-list', function (req, res) {
   }
 })
 
-router.get('/transaction-info', function (req, res) {
+router.get('/transaction-info/:id', function (req, res) {
   try {
-    const transactionId = req.headers.authorization
+    const transactionId = req.params.id
     if (!transactionId) {
       return res.status(400).json({
         message: 'Error: Transaction ID was not provided',
