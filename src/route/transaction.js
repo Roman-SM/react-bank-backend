@@ -347,7 +347,6 @@ router.get('/notification-info/:id', function (req, res) {
           'Error: A transaction with this ID does not exist',
       })
     }
-    console.log(notification)
 
     return res.status(200).json({
       notification: {
