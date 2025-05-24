@@ -69,8 +69,6 @@ router.post('/signup', function (req, res) {
 
     const code = Confirm.getCode(email)
 
-    console.log(newUser)
-
     return res.status(200).json({
       message: 'User registered successfully',
       session,
@@ -157,13 +155,15 @@ router.post('/signin', function (req, res) {
       Confirm.create(user.email)
     }
 
-    const session = Session.create(user)
-
     const code = Confirm.getCode(email)
 
+    const session = Session.create(user)
+
     Notification.newEvent(
+      Notification.status,
       Notification.warning,
-      Notification.login,
+      Notification.warning,
+      Notification.text,
       email,
     )
 
@@ -242,6 +242,8 @@ router.post('/recovery-confirm', function (req, res) {
     const session = Session.create(user)
 
     Notification.newEvent(
+      Notification.status,
+      Notification.warning,
       Notification.warning,
       Notification.changePassword,
       email,
@@ -289,6 +291,8 @@ router.post('/recovery-email', function (req, res) {
     const session = Session.create(user)
 
     Notification.newEvent(
+      Notification.status,
+      Notification.warning,
       Notification.warning,
       Notification.changeEmail,
       email,
@@ -333,6 +337,8 @@ router.post('/recovery-password', function (req, res) {
     User.updatePassword(user, newPassword)
 
     Notification.newEvent(
+      Notification.status,
+      Notification.warning,
       Notification.warning,
       Notification.changePassword,
       email,

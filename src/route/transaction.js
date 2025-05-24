@@ -89,14 +89,26 @@ router.post('/send', function (req, res) {
     User.deposit(recipientUser, sum)
 
     Notification.newEvent(
+      Notification.status,
+      Notification.transfer,
       Notification.announcement,
       Notification.transfer,
       senderEmail,
+      sum,
+      senderEmail,
+      recipientEmail,
+      Notification.typeSend,
     )
     Notification.newEvent(
+      Notification.status,
+      Notification.transfer,
       Notification.announcement,
       Notification.transfer,
       recipientEmail,
+      sum,
+      senderEmail,
+      recipientEmail,
+      Notification.typeRecive,
     )
 
     return res.status(200).json({
@@ -136,9 +148,12 @@ router.post('/recive-coinbase', function (req, res) {
     User.deposit(user, Number(sum))
 
     Notification.newEvent(
+      Notification.status,
+      Notification.deposit,
       Notification.announcement,
       Notification.depositCoinbase,
       email,
+      sum,
     )
 
     return res.status(200).json({
@@ -179,9 +194,12 @@ router.post('/recive-stripe', function (req, res) {
     User.deposit(user, sum)
 
     Notification.newEvent(
+      Notification.status,
+      Notification.deposit,
       Notification.announcement,
       Notification.depositStripe,
       email,
+      sum,
     )
 
     return res.status(200).json({
@@ -309,5 +327,46 @@ router.get('/notifications-list', function (req, res) {
   }
 })
 
+router.get('/notification-info/:id', function (req, res) {
+  try {
+    const notificationId = req.params.id
+
+    if (!notificationId) {
+      return res.status(400).json({
+        message: 'Error: Transaction ID was not provided',
+      })
+    }
+
+    const notification = Notification.getById(
+      Number(notificationId),
+    )
+
+    if (!notification) {
+      return res.status(400).json({
+        message:
+          'Error: A transaction with this ID does not exist',
+      })
+    }
+    console.log(notification)
+
+    return res.status(200).json({
+      notification: {
+        id: notification.id,
+        date: notification.date,
+        status: notification.status,
+        typeNotification: notification.typeNotification,
+        type: notification.type,
+        text: notification.text,
+        email: notification.email,
+        emailSender: notification.emailSender,
+        emailRecipient: notification.emailRecipient,
+        sum: notification.sum,
+        typeTransfer: notification.typeTransfer,
+      },
+    })
+  } catch (e) {
+    return res.status(400).json({ message: e.message })
+  }
+})
 // Експортуємо глобальний роутер
 module.exports = router

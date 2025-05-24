@@ -6,7 +6,7 @@ class User {
     this.id = User.#count++
     this.email = String(email).toLowerCase()
     this.password = String(password)
-    this.balance = 1000
+    this.balance = 0
     this.isConfirm = isConfirm
   }
   static create(email, password, isConfirm) {
