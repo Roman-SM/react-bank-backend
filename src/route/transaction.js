@@ -212,28 +212,7 @@ router.post('/recive-stripe', function (req, res) {
   }
 })
 
-router.get('/balance', function (req, res) {
-  try {
-    const userEmail = req.headers.authorization
-
-    const email = User.getByEmail(userEmail)
-    if (!email) {
-      return res.status(400).json({
-        message:
-          'Error: A user with this email does not exist',
-      })
-    }
-    const balance = email.balance
-
-    return res.status(200).json({
-      balance,
-    })
-  } catch (e) {
-    return res.status(400).json({ message: e.message })
-  }
-})
-
-router.get('/transactions-list', function (req, res) {
+router.get('/balance-info', function (req, res) {
   try {
     const userEmail = req.headers.authorization
 
@@ -246,8 +225,10 @@ router.get('/transactions-list', function (req, res) {
     }
     const transactions =
       Transaction.getListByEmail(userEmail)
+    const balance = email.balance
 
     return res.status(200).json({
+      balance,
       transactions: transactions.map(
         ({ id, date, sum, type, img, typeEvent }) => ({
           id,
